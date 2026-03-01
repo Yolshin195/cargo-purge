@@ -51,10 +51,10 @@ fn main() {
                 for p in &found {
                     println!("  - {}", p.display());
                 }
-                
+
                 save_to_cache(&found);
                 println!("\n⏱️ Поиск занял: {:?}", duration);
-                println!("💡 Теперь запустите: ./mytool clear");
+                println!("💡 Теперь запустите: ./cargo-purge clear");
             }
         }
         Commands::Clear => {
@@ -65,10 +65,10 @@ fn main() {
             }
 
             println!("🧹 Начинаю 'cargo clean' для {} проектов...", paths.len());
-            
+
             for p in paths {
                 println!("🚀 Очистка в: {}", p.display());
-                
+
                 // Запускаем cargo clean внутри директории проекта
                 let status = Command::new("cargo")
                     .arg("clean")
@@ -81,14 +81,12 @@ fn main() {
                     Err(e) => eprintln!("  ❌ Не удалось запустить cargo: {}", e),
                 }
             }
-            
+
             let _ = fs::remove_file(CACHE_FILE);
             println!("✨ Все операции завершены.");
         }
     }
 }
-
-// --- Логика поиска остается прежней ---
 
 fn find_cargo_projects(root: &Path, exclude_list: Vec<String>) -> Vec<PathBuf> {
     let custom_excludes: HashSet<String> = exclude_list.into_iter().collect();
@@ -117,14 +115,23 @@ fn find_cargo_projects(root: &Path, exclude_list: Vec<String>) -> Vec<PathBuf> {
 
 fn should_skip(entry: &DirEntry, custom_excludes: &HashSet<String>) -> bool {
     const DEFAULT_IGNORES: &[&str] = &[
-        ".git", "target", "node_modules", ".idea", ".vscode", "build", "venv"
+        ".git",
+        "target",
+        "node_modules",
+        ".idea",
+        ".vscode",
+        "build",
+        "venv",
     ];
     let file_name = entry.file_name().to_string_lossy();
     DEFAULT_IGNORES.contains(&file_name.as_ref()) || custom_excludes.contains(file_name.as_ref())
 }
 
 fn save_to_cache(paths: &[PathBuf]) {
-    let data: Vec<String> = paths.iter().map(|p| p.to_string_lossy().into_owned()).collect();
+    let data: Vec<String> = paths
+        .iter()
+        .map(|p| p.to_string_lossy().into_owned())
+        .collect();
     let _ = fs::write(CACHE_FILE, data.join("\n"));
 }
 
