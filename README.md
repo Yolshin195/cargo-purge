@@ -8,14 +8,14 @@ The key feature is **smart traversal**: the program skips heavy directories like
 
 ## 🚀 Installation
 
-### From Source
-Ensure you have Rust installed. Clone the repository or navigate to the project folder and run:
+### From Git
+Ensure you have Rust installed. Run the following command to install directly from the repository:
 
 ```bash
-cargo install --path .
+cargo install --git https://github.com/Yolshin195/cargo-purge
 ```
 
-This command compiles the binary in `release` mode and copies it to `~/.cargo/bin`. The tool will then be available globally as `cargo-purge`.
+This command will clone the repository, compile the binary in release mode, and install it to `~/.cargo/bin`. The tool will then be available globally as `cargo-purge`.
 
 ---
 
