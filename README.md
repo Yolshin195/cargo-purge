@@ -4,20 +4,16 @@
 
 The key feature is **smart traversal**: the program skips heavy directories like (`target`, `.git`, `node_modules`) and stops searching deeper into a branch once a Rust project root is found.
 
----
-
 ## 🚀 Installation
 
-### From Source
-Ensure you have Rust installed. Clone the repository or navigate to the project folder and run:
+### From Git
+Ensure you have Rust installed. Run the following command to install directly from the repository:
 
 ```bash
-cargo install --path .
+cargo install --git https://github.com/Yolshin195/cargo-purge
 ```
 
-This command compiles the binary in `release` mode and copies it to `~/.cargo/bin`. The tool will then be available globally as `cargo-purge`.
-
----
+This command will clone the repository, compile the binary in release mode, and install it to `~/.cargo/bin`. The tool will then be available globally as `cargo-purge`.
 
 ## 🛠 Usage
 
@@ -46,8 +42,6 @@ cargo-purge clear
 
 **Safety:** The tool visits each project directory sequentially and invokes the official `cargo clean` command. Once finished, the cache file is automatically deleted.
 
----
-
 ## 📂 Ignored Directories
 For maximum performance, the program automatically skips:
 * `target`, `.git`, `node_modules`, `.idea`, `.vscode`, `build`, `venv`.
@@ -55,14 +49,16 @@ For maximum performance, the program automatically skips:
 
 
 
----
-
 ## ⚙️ Technical Details
 
 * **Cache File:** `.found_projects.txt` is created in the directory where `find` was executed. You must run the `clear` command from the same directory.
 * **Requirements:** Rust 1.56+ and `cargo` available in your system PATH.
 
----
+
+## Dependencies
+
+- clap 4.5.60
+- walkdir 2.5
 
 ## 📝 License
 MIT. Enjoy!
