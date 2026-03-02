@@ -2,41 +2,40 @@ use clap::{Parser, Subcommand};
 use std::collections::HashSet;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::Command; // Модуль для запуска внешних команд
+use std::process::Command;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use walkdir::{DirEntry, WalkDir};
 
 #[derive(Parser)]
-#[command(name = "rust-finder")]
-#[command(about = "Поиск и очистка Rust проектов через cargo clean", long_about = None)]
-struct Cli {
-    #[command(subcommand)]
-    command: Commands,
+#[command(name = "cargo", bin_name = "cargo")]
+enum Cargo {
+    Purge {
+        #[command(subcommand)]
+        command: Commands,
+    },
 }
 
 #[derive(Subcommand)]
 enum Commands {
     /// Поиск Rust проектов и сохранение их путей
     Find {
-        /// Где начинать поиск
         #[arg(default_value = ".")]
         path: PathBuf,
 
-        /// Дополнительные папки для игнорирования (флаг -e)
         #[arg(short, long)]
         exclude: Vec<String>,
     },
-    /// Очистка найденных проектов через 'cargo clean'
+    /// Очистка найденных проектов
     Clear,
 }
 
-const CACHE_FILE: &str = ".found_projects.txt";
+const CACHE_FILE: &str = "cargo-purge-found-projects.tmp";
 
 fn main() {
-    let cli = Cli::parse();
+    let Cargo::Purge { command } = Cargo::parse();
 
-    match cli.command {
+    match command {
         Commands::Find { path, exclude } => {
             println!("🔍 Поиск Rust проектов в: {}", path.display());
             let start = Instant::now();

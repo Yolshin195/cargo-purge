@@ -2,6 +2,7 @@
 name = "cargo-purge"
 version = "0.1.0"
 edition = "2024"
+description = "A cargo plugin to find and clean rust projects recursively"
 
 [dependencies]
 clap = { version = "4.5.60", features = ["derive"] }
